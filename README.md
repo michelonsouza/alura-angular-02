@@ -16,6 +16,8 @@ yarn install
 cd backend && yarn install
 ```
 
+Backend run on `http://localhost:3000`
+
 ### Run backend
 
 ```bash
