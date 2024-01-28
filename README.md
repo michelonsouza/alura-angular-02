@@ -1,8 +1,28 @@
 # Memoteca
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.0.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.10.
 
 ## Development server
+
+### Install dependencies
+
+```bash
+yarn install
+```
+
+### Install `backend` dependencies
+
+```bash
+cd backend && yarn install
+```
+
+### Run backend
+
+```bash
+cd backend && yarn start
+```
+
+### Run application
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
