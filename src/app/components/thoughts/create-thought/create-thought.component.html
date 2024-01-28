@@ -1,0 +1,43 @@
+<section class="container criar-pensamentos ff-inter">
+  <header class="header">
+    <h2>Adicione um <br />pensamento novo:</h2>
+  </header>
+  <form>
+    <label for="pensamento">
+      Pensamento
+    </label>
+    <input type="textarea" class="input" id="pensamento" name="pensamento" placeholder="Digite o pensamento"
+      [(ngModel)]="thought.content" />
+    <label for="autoria">
+      Autoria ou fonte
+    </label>
+    <input type="textarea" class="input" id="autoria" name="autoria" placeholder="Digite o autoria"
+      [(ngModel)]="thought.authorship" />
+    <label for="modelo">
+      Selecione o modelo do card:
+    </label>
+    <div class="container-radio">
+      <div *ngFor="let model of models" class="radio-modelo">
+        <label for="{{model.id}}">
+          <input type="radio" id="{{model.id}}" value="{{model.id}}" name="model-card" [(ngModel)]="thought.model" />
+          <div class="custom-radio">
+            <span></span>
+          </div>
+          <span>{{model.label}}</span>
+        </label>
+        Prévia:
+        <div class="modelo {{model.class}} ff-roboto-mono">
+          <img src="../../../../assets/images/{{model.image}}.png" alt="{{model.imgAlt}}">
+          <p class="conteudo">{{thought.content}}</p>
+          <p class="autoria">
+            <b>{{thought.authorship}}</b>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="acoes">
+      <button type="reset" (click)="createThought()" class="botao">Salvar</button>
+      <button type="reset" routerLink="/list-thought" class="botao">Cancelar</button>
+    </div>
+  </form>
+</section>
