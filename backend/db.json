@@ -32,7 +32,8 @@
       "id": "5274",
       "content": "4 Pensamento estranho que não sei se funciona, mas eu quero fazer assim mesmo...",
       "authorship": "michelon souza",
-      "model": "modelo3"
+      "model": "modelo3",
+      "favorite": true
     },
     {
       "id": "5275",
@@ -72,6 +73,13 @@
       "model": "modelo1",
       "favorite": false,
       "id": "Ovyjovy"
+    },
+    {
+      "content": "Quem com o ferro fere, com o ferro será ferido...",
+      "authorship": "pensador popular",
+      "model": "modelo1",
+      "favorite": false,
+      "id": "22nhQTw"
     }
   ]
 }
