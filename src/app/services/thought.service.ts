@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { Thought, CreateThoughtFormValues } from '@/models';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,26 @@ export class ThoughtService {
 
   constructor(private http: HttpClient) {}
 
-  list(): Observable<Thought[]> {
-    return this.http.get<Thought[]>(this.API_URL);
+  list(page = 1, filter: string, favorite: boolean): Observable<Thought[]> {
+    const _limit = 6;
+    const _start = (page - 1) * _limit;
+    let params = new HttpParams().set('_start', _start).set('_limit', _limit);
+
+    if (favorite) {
+      params = params.set('favorite', favorite);
+    }
+
+    if (filter.trim().length > 2) {
+      params = params.set('q', filter);
+    }
+
+    return this.http.get<Thought[]>(this.API_URL, {
+      params,
+    });
+  }
+
+  toggleFavorite(thought: Thought): Observable<Thought> {
+    return this.edit({ ...thought, favorite: !thought.favorite });
   }
 
   getById(id: string): Observable<Thought> {
