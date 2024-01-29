@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Model, Thought, CreateThoughtFormValues } from '@/models';
+import { Model, Thought } from '@/models';
 import { ThoughtService } from '@/services';
+import { lowercaseValidator } from '@/validators';
 
 @Component({
   selector: 'app-create-thought',
@@ -34,27 +36,49 @@ export class CreateThoughtComponent implements OnInit {
     },
   ];
 
-  thought: CreateThoughtFormValues = {
-    content: '',
-    authorship: '',
-    model: 'modelo1',
-  };
-  constructor(private router: Router, private service: ThoughtService) {}
+  form!: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(
+    private router: Router,
+    private service: ThoughtService,
+    private formBuilder: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      content: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(/(.|\s)*\S(.|\s)*/),
+        ]),
+      ],
+      authorship: [
+        '',
+        Validators.compose([Validators.required, Validators.minLength(3)]),
+        lowercaseValidator,
+      ],
+      model: ['modelo1'],
+      favorite: [false],
+    });
+  }
 
   createThought() {
-    this.service.create(this.thought as Thought).subscribe({
-      next: () => {
-        this.thought = {
-          content: '',
-          authorship: '',
-          model: 'modelo1',
-        };
+    if (this.form.valid) {
+      this.service.create(this.form.value as Thought).subscribe({
+        next: () => {
+          this.router.navigate(['/list-thought']);
+        },
+        error: console.error,
+      });
+    }
+  }
 
-        this.router.navigate(['/list-thought']);
-      },
-      error: console.error,
-    });
+  enableButton(): string {
+    if (this.form.valid) {
+      return 'botao';
+    } else {
+      return 'botao__desabilitado';
+    }
   }
 }

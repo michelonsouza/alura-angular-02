@@ -2,24 +2,32 @@
   <header class="header">
     <h2>Adicione um <br />pensamento novo:</h2>
   </header>
-  <form>
+  <form [formGroup]="form">
     <label for="pensamento">
       Pensamento
     </label>
-    <input type="textarea" class="input" id="pensamento" name="pensamento" placeholder="Digite o pensamento"
-      [(ngModel)]="thought.content" />
+    <input type="textarea" class="input" id="pensamento" formControlName="content" placeholder="Digite o pensamento" />
+    <div class="mensagem__erro" *ngIf="form.get('content')?.errors?.['required'] && form.get('content')?.touched">
+      Pensamento é obrigatório!
+    </div>
     <label for="autoria">
       Autoria ou fonte
     </label>
-    <input type="textarea" class="input" id="autoria" name="autoria" placeholder="Digite o autoria"
-      [(ngModel)]="thought.authorship" />
-    <label for="modelo">
+    <input type="textarea" class="input" id="autoria" formControlName="authorship" placeholder="Digite o autoria" />
+    <div class="mensagem__erro" *ngIf="form.get('authorship')?.errors?.['required'] && form.get('authorship')?.touched">
+      Autoria é obrigatória!
+    </div>
+    <div class=" mensagem__erro"
+      *ngIf="form.get('authorship')?.errors?.['minlength'] && form.get('authorship')?.touched">
+      Autoria precia conter, no mínimo, 3 caracteres!
+    </div>
+    <label for=" modelo">
       Selecione o modelo do card:
     </label>
     <div class="container-radio">
       <div *ngFor="let model of models" class="radio-modelo">
         <label for="{{model.id}}">
-          <input type="radio" id="{{model.id}}" value="{{model.id}}" name="model-card" [(ngModel)]="thought.model" />
+          <input type="radio" id="{{model.id}}" value="{{ model.id }}" formControlName="model" />
           <div class="custom-radio">
             <span></span>
           </div>
@@ -28,15 +36,16 @@
         Prévia:
         <div class="modelo {{model.class}} ff-roboto-mono">
           <img src="../../../../assets/images/{{model.image}}.png" alt="{{model.imgAlt}}">
-          <p class="conteudo">{{thought.content}}</p>
+          <p class="conteudo">{{ form.get('content')?.value }}</p>
           <p class="autoria">
-            <b>{{thought.authorship}}</b>
+            <b>{{ form.get('authorship')?.value }}</b>
           </p>
         </div>
       </div>
     </div>
     <div class="acoes">
-      <button type="reset" (click)="createThought()" class="botao">Salvar</button>
+      <button type="submit" (click)="createThought()" class="botao" [disabled]="!form.valid"
+        [ngClass]="enableButton()">Salvar</button>
       <button type="reset" routerLink="/list-thought" class="botao">Cancelar</button>
     </div>
   </form>

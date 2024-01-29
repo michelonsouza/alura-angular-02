@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Model, Thought } from '@/models';
-import { ThoughtService } from '@/services';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { getFormErrorByName } from '@/errors';
+import { Model } from '@/models';
+import { ThoughtService } from '@/services';
+import { lowercaseValidator } from '@/validators';
 
 @Component({
   selector: 'app-edit-thought',
@@ -34,27 +37,53 @@ export class EditThoughtComponent implements OnInit {
     },
   ];
 
-  thought: Thought = {} as Thought;
+  form: FormGroup = this.formBuilder.group({
+    id: [''],
+    content: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern(/(.|\s)*\S(.|\s)*/),
+      ]),
+    ],
+    authorship: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(3),
+        lowercaseValidator,
+      ]),
+    ],
+    model: ['modelo1'],
+    favorite: [false],
+  });
 
   constructor(
     private service: ThoughtService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
-    if (id) {
-      this.service.getById(id).subscribe({
-        next: (thought) => (this.thought = thought),
-        error: console.error,
-      });
-    }
+    this.service.getById(id!).subscribe({
+      next: (thought) => {
+        this.form.setValue({
+          id: thought.id,
+          content: thought.content,
+          authorship: thought.authorship,
+          model: thought.model,
+          favorite: thought?.favorite,
+        });
+      },
+      error: console.error,
+    });
   }
 
   editThought(): void {
-    this.service.edit(this.thought).subscribe({
+    console.log({ value: this.form.value });
+    this.service.edit(this.form.value).subscribe({
       complete: () => {
         this.router.navigate(['/list-thought']);
       },
@@ -63,5 +92,17 @@ export class EditThoughtComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/list-thought']);
+  }
+
+  enableButton(): string {
+    if (this.form.valid) {
+      return 'botao';
+    } else {
+      return 'botao__desabilitado';
+    }
+  }
+
+  getError(fieldName: string, errorName: string): boolean {
+    return getFormErrorByName(this.form, fieldName, errorName);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Thought } from '@/models';
 
@@ -7,13 +7,14 @@ import { Thought } from '@/models';
   templateUrl: './thought.component.html',
   styleUrls: ['./thought.component.css'],
 })
-export class ThoughtComponent implements OnInit {
+export class ThoughtComponent {
   @Input()
   thought: Thought = {} as Thought;
 
-  constructor() {}
+  @Output()
+  favoriteUpdated = new EventEmitter();
 
-  ngOnInit(): void {}
+  constructor() {}
 
   thoughtWidth() {
     if (this.thought.content.length >= 256) {
@@ -21,5 +22,13 @@ export class ThoughtComponent implements OnInit {
     }
 
     return 'pensamento-p';
+  }
+
+  getIsFavorite() {
+    return this.thought?.favorite ? 'ativo' : 'inativo';
+  }
+
+  updateFavorite() {
+    this.favoriteUpdated.emit(this.thought);
   }
 }

@@ -5,8 +5,11 @@
     <b>{{ thought.authorship }}</b>
   </p>
   <div class="acoes">
-    <button class="botao-editar">
-      <img src="/assets/images/icone-editar.png" routerLink="/edit-thought/{{ thought.id }}" alt="Ícone editar" />
+    <button class="botao-favorito" (click)="updateFavorite()">
+      <img src="/assets/images/icone-favorito-{{ getIsFavorite() }}.png" alt="Ícone favorito {{ getIsFavorite() }}" />
+    </button>
+    <button class="botao-editar" routerLink="/edit-thought/{{ thought.id }}">
+      <img src="/assets/images/icone-editar.png" alt="Ícone editar" />
     </button>
     <button class="botao-excluir" routerLink="/delete-thought/{{ thought.id }}">
       <img src="/assets/images/icone-excluir.png" alt="Ícone excluir" />
